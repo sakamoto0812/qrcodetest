@@ -55,7 +55,10 @@
     
     <div id="output" hidden>
       <div id="outputMessage">QRコードが読み取れません。</div>
-      <div hidden><b>Data:</b> <span id="outputData"></span></div>
+      <div hidden>
+        <b>Data:</b>
+        <span id="outputData"></span>
+      </div>
     </div>
 
     
@@ -101,16 +104,18 @@
          var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
          var code = jsQR(imageData.data, imageData.width, imageData.height);
          if (code) {
+           // 四角い赤線で囲う
            drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
            drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
            drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
            drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+           
            outputMessage.hidden = true;
            outputData.parentElement.hidden = false;
            outputData.innerText = code.data;
          } else {
-           outputMessage.hidden = false;
-           outputData.parentElement.hidden = true;
+           /* outputMessage.hidden = false;
+            * outputData.parentElement.hidden = true;*/
          }
        }
        requestAnimationFrame(tick);
