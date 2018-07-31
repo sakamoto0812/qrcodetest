@@ -59,7 +59,7 @@
        }
      }
 
-     canvas.lineWidth = 10;
+
     
      canvas.ontouchstart = (e) => {
        e.preventDefault();
@@ -69,6 +69,7 @@
 
      canvas.ontouchmove = (e) => {
        const t = e.touches[0];
+       canvas.lineWidth = 10;
        ctx.lineTo(t.pageX, t.pageY);
        ctx.stroke();
      };
