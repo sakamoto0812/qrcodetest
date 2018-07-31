@@ -67,6 +67,7 @@
      canvas.ontouchstart = (e) => {
        e.preventDefault();
        const t = e.touches[0];
+       ctx.beginPath();
        ctx.moveTo(t.pageX, t.pageY);
      };
 
@@ -75,6 +76,10 @@
        ctx.lineTo(t.pageX, t.pageY);
        ctx.stroke();
      };
+
+     canvas.ontouchentd = (e) => {
+       ctx.closePath();
+     }
      
     </script>
   </body>
