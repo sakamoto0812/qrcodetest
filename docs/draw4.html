@@ -19,10 +19,13 @@
      // Canvasの準備
      canvas.width = canvasWidth;
      canvas.height = canvasHeight;
-     canvas.lineWidth = 10;
+     
      
      const ctx = canvas.getContext('2d');
-
+     
+     ctx.strokeStyle = '#ff0000'; // 線の色
+     ctx.lineWithd = 10;
+       
 
      function loadLocalImage(e) {
      // ファイル情報を取得
