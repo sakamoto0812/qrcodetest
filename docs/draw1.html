@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <meta charset="utf-8">
+    <title>お絵かき</title>
+  </head>
+  <body>
+    <h1>お絵かきテスト</h1>
+    <canvas id='pic' width='1000' height='1000'></canvas>
+
+    <script>
+     const pic = document.getElementById('pic');
+     const ctx = pic.getContext('2d');
+
+     pic.ontouchstart = (e) => {
+       e.preventDefault();
+       const t = e.touches[0];
+       ctx.moveTo(t.pageX, t.pageY);
+     };
+
+     pic.ontouchmove = (e) => {
+       const t = e.touches[0];
+       ctx.lineTo(t.pageX, t.pageY);
+       ctx.stroke();
+     };
+     
+    </script>
+  </body>
+</html>
+
+
+
+
