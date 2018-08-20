@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <meta charset="utf-8">
+    <title>jsQR Demo</title>
+    <style>
+     table, th, td {
+       border-collapse: collapse;
+       border: 1px solid #ccc;
+       line-height: 1.5;
+     }
+
+     table.type06 th {
+       width: 150px;
+       padding: 10px;
+       font-weight: bold;
+       vertical-align: top;
+     }
+     table.type06 td {
+       width: 350px;
+       padding: 10px;
+       vertical-align: top;
+     }
+
+     tr:nth-child(even) {
+       background: #d9d9d9;
+     }
+    </style>
+  </head>
+  <body>
+    <h1>QRコードリーダーのテスト</h1>
+    <input id='pushme' type='button' value='push me.'/>
+
+    <h2>QRコード</h2>
+    <div id='container'>
+      <table id='myTable'>
+        
+      </table>
+    </div>
+
+
+
+    
+    <script>
+     const prepared = [ 'aaa', 'bbb', 'ccc', 'ddd', 'bbb', 'ddd', 'fff'];
+     const scanned = new Set();
+
+     const btn =document.getElementById('pushme');
+     const table = document.getElementById('myTable');
+     
+     const onclick = evt => {
+       const code = prepared.shift();
+       if (scanned.has(code)) {
+         return;
+       }
+       scanned.add(code);
+       
+       const rowIndex = table.rows.length;
+
+       const row = table.insertRow(rowIndex);
+       const cell1 = row.insertCell(0);
+       cell1.innerHTML = rowIndex + 1;
+
+       const cell2 = row.insertCell(1);
+       cell2.innerHTML = code;
+       
+     };
+     
+     btn.addEventListener("click", onclick, false);
+     
+    </script>
+  </body>
+</html>
+
+
+
+
