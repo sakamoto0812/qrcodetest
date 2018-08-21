@@ -70,7 +70,7 @@
     </style>
   </head>
   <body>
-    <h1>QRコードリーダーのテスト2.0.3</h1>
+    <h1>QRコードリーダーのテスト2.0.4</h1>
     <div id="loadingMessage">ビデオが有効になっていません。</div>
 
     <!-- キャンバス -->
@@ -146,7 +146,8 @@
 
            // 読み取ったQRコード
            const qrCodeData = code.data;
-
+           alert(typeof qrCodeData);
+           alert(scanned.has(code));
            // 読み取り済でない新規データであればテーブルに追加
            if (!scanned.has(code)) {
              // 読み取り済QRコード
