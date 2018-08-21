@@ -70,7 +70,7 @@
     </style>
   </head>
   <body>
-    <h1>QRコードリーダーのテスト2.0.2</h1>
+    <h1>QRコードリーダーのテスト2.0.3</h1>
     <div id="loadingMessage">ビデオが有効になっていません。</div>
 
     <!-- キャンバス -->
@@ -137,7 +137,6 @@
          var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
          var code = jsQR(imageData.data, imageData.width, imageData.height);
          if (code) {
-
            
            // 四角い赤線で囲う
            drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
@@ -145,11 +144,13 @@
            drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
            drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
 
-           const qrCodeData = code.data.toString();
-           // 読み取り済QRコード
-           scanned.add(qrCodeData);
+           // 読み取ったQRコード
+           const qrCodeData = code.data;
 
+           // 読み取り済でない新規データであればテーブルに追加
            if (!scanned.has(code)) {
+             // 読み取り済QRコード
+             scanned.add(qrCodeData);
              outputMessage.hidden = true;
              
              const rowIndex = table.rows.length;
