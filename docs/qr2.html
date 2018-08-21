@@ -70,7 +70,7 @@
     </style>
   </head>
   <body>
-    <h1>QRコードリーダーのテスト2</h1>
+    <h1>QRコードリーダーのテスト2.0.1</h1>
     <div id="loadingMessage">ビデオが有効になっていません。</div>
 
     <!-- キャンバス -->
@@ -136,28 +136,29 @@
          canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
          var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
          var code = jsQR(imageData.data, imageData.width, imageData.height);
-         if (code && !scanned.has(code)) {
-           // 読み取り済QRコード
-           scanned.add(code);
+         if (code) {
+
            
            // 四角い赤線で囲う
            drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
            drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
            drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
            drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-           
-           outputMessage.hidden = true;
-           //outputData.innerText = code.data;
-           
-           const rowIndex = table.rows.length;
 
-           const row = table.insertRow(rowIndex);
-           const cell1 = row.insertCell(0);
-           cell1.innerHTML = rowIndex + 1;
+           const qrCodeData = code.data;
+           // 読み取り済QRコード
+           scanned.add(qrCodeData);
 
-           const cell2 = row.insertCell(1);
-           cell2.innerHTML = code;
-           
+           if (!scanned.has(code)) {
+             outputMessage.hidden = true;
+             
+             const rowIndex = table.rows.length;
+             const row = table.insertRow(rowIndex);
+             const cell1 = row.insertCell(0);
+             cell1.innerHTML = rowIndex + 1;
+             const cell2 = row.insertCell(1);
+             cell2.innerHTML = qrCodeData;
+           }
            
          } else {
            /* outputMessage.hidden = false;
