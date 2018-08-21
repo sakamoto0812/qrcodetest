@@ -70,7 +70,7 @@
     </style>
   </head>
   <body>
-    <h1>QRコードリーダーのテスト2.0.1</h1>
+    <h1>QRコードリーダーのテスト2.0.2</h1>
     <div id="loadingMessage">ビデオが有効になっていません。</div>
 
     <!-- キャンバス -->
@@ -145,7 +145,7 @@
            drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
            drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
 
-           const qrCodeData = code.data;
+           const qrCodeData = code.data.toString();
            // 読み取り済QRコード
            scanned.add(qrCodeData);
 
