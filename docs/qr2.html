@@ -78,7 +78,7 @@
     
     <div id="output" hidden>
       <div id="outputMessage">QRコードが読み取れません。</div>
-      <table id='myTable'>
+      <table id='qrcodes'>
         
       </table>
     </div>
@@ -95,7 +95,7 @@
      const loadingMessage = document.getElementById("loadingMessage");
      const outputContainer = document.getElementById("output");
      const outputMessage = document.getElementById("outputMessage");
-
+     const table = document.getElementById('qrcodes');
 
      // 設定値
      const delay = 50; // ms
@@ -157,7 +157,6 @@
 
            const cell2 = row.insertCell(1);
            cell2.innerHTML = code;
-
            
            
          } else {
