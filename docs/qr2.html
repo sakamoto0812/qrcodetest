@@ -66,7 +66,7 @@
   </head>
   <body>
     <div id='camera'>
-      <h1>QRコードリーダー2.0.7</h1>
+      <h1>QRコードリーダー2.0.8</h1>
       <div id="loadingMessage">ビデオが有効になっていません。</div>
 
       <!-- キャンバス -->
@@ -103,6 +103,10 @@
      // 設定値
      const delay = 50; // ビデオ読み取り間隔(ms)
      const waitAfterRead = 1000; // QRコード読み取り後の待ち時間(ms)
+
+     // 色
+     const red = "#FF3B58";
+     const blue = "#3B58FF";
      
      // データ
      const scanned = new Set();  // 読み取り済みQRコード
@@ -127,18 +131,14 @@
      });
 
 
-     function drawRectangle(code) {
-       drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-       drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-       drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-       drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+     function drawRectangle(code, color) {
+       drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
+       drawLine(code.location.topRightCorner, code.location.bottomRightCorner, color);
+       drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, color);
+       drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);
      }
 
      function writeQrCode(qrCodeData) {
-       if (scanned.has(qrCodeData)) {
-         return;
-       }
-       scanned.add(qrCodeData);
        outputMessage.hidden = true;
        // 読み取り済でない新規データであればテーブルに追加       
        const rowIndex = table.rows.length;
@@ -168,12 +168,23 @@
          var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
          var code = jsQR(imageData.data, imageData.width, imageData.height);
          if (code) {
-           // 四角い赤線で囲う
-           drawRectangle(code);
-           // 読み取ったQRコードをテーブルに追加
-           writeQrCode(code.data);
+           const qrCodeData = code.data;
+           if (!scanned.has(qrCodeData)) {
+             // 読み取り済QRコードとして記憶
+             scanned.add(qrCodeData);
+             // 読み取ったQRコードをテーブルに追加
+             writeQrCode(qrCodeData, red);
+             // waitを入れる
+             delayToNextTick += waitAfterRead;
 
-           delayToNextTick += waitAfterRead;
+             // 四角い線で囲う
+             drawRectangle(code, red);
+
+           } else {
+             // 読み取り済みの場合
+             // 四角い線で囲う
+             drawRectangle(code, blue);
+           }
          }
        }
        setTimeout(tick, delayToNextTick);
