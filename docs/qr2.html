@@ -66,7 +66,7 @@
   </head>
   <body>
     <div id='camera'>
-      <h1>QRコードリーダー2.0.8</h1>
+      <h1>QRコードリーダー2.0.9</h1>
       <div id="loadingMessage">ビデオが有効になっていません。</div>
 
       <!-- キャンバス -->
@@ -107,6 +107,10 @@
      // 色
      const red = "#FF3B58";
      const blue = "#3B58FF";
+
+     // 音
+     const soundEffect = new Audio('./chimes.wav');
+     soundEffect.load();
      
      // データ
      const scanned = new Set();  // 読み取り済みQRコード
@@ -177,6 +181,9 @@
              // waitを入れる
              delayToNextTick += waitAfterRead;
 
+             // 音を鳴らす
+             soundEffect.play();
+             
              // 四角い線で囲う
              drawRectangle(code, red);
 

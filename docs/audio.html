@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <button id="play">Play</button>
+    <script>
+     document.getElementById('play').addEventListener('click', evt => {
+       const audio = new Audio('./chimes.wav');
+       audio.load();
+       audio.play();
+     });
+    </script>
+  </body>
+</html>
+
+
