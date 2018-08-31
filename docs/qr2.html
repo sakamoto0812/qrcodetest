@@ -66,7 +66,7 @@
   </head>
   <body>
     <div id='camera'>
-      <h1>QRコードリーダー2.0.9</h1>
+      <h1>QRコードリーダー2.1.0</h1>
       <div id="loadingMessage">ビデオが有効になっていません。</div>
 
       <!-- キャンバス -->
@@ -185,12 +185,12 @@
              soundEffect.play();
              
              // 四角い線で囲う
-             drawRectangle(code, red);
+             drawRectangle(code, blue);
 
            } else {
              // 読み取り済みの場合
              // 四角い線で囲う
-             drawRectangle(code, blue);
+             drawRectangle(code, red);
            }
          }
        }
