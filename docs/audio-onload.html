@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body onload="document.getElementById('audio').play();">
+    <h1>0.0.2</h1>
+    <button id="play">Play</button>
+    <audio id='audio' src='./chimes.wav' preload='auto'></audio>
+    <script>
+     document.getElementById('play').addEventListener('click', playSound);
+    </script>
+  </body>
+</html>
+
+
