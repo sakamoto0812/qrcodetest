@@ -4,11 +4,14 @@
     <meta charset="utf-8">
   </head>
   <body onload="document.getElementById('audio').play();">
-    <h1>0.0.2</h1>
+    <h1>0.0.3</h1>
     <button id="play">Play</button>
     <audio id='audio' src='./chimes.wav' preload='auto'></audio>
     <script>
-     document.getElementById('play').addEventListener('click', playSound);
+     document.getElementById('play').addEventListener('click', () => {
+       document.getElementById('audio').play();
+     });
+     
     </script>
   </body>
 </html>
