@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <meta charset="utf-8">
+    <title>Table Demo</title>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+
+    <style>
+     body {
+       font-family: sans-serif;
+       color: #333;
+       max-width: 640px;
+       margin: 0 auto;
+       //position: relative;
+     }
+
+     h1 {
+       margin: 10px 0;
+       font-size: 40px;
+     }
+
+     #loadingMessage {
+       text-align: center;
+       padding: 40px;
+       background-color: #eee;
+     }
+
+     #canvas {
+       width: 100%;
+     }
+
+     #output {
+       margin-top: 20px;
+       background: #eee;
+       padding: 10px;
+       padding-bottom: 0;
+     }
+
+     #output div {
+       padding-bottom: 10px;
+       word-wrap: break-word;
+     }
+
+     #noQRFound {
+       text-align: center;
+     }
+     /* テーブル  */
+     table, th, td {
+       border-collapse: collapse;
+       border: 1px solid #ccc;
+       line-height: 1.5;
+     }
+
+     tr:nth-child(even) {
+       background: #d9d9d9;
+     }
+
+
+     div#output {
+       height: 300px;
+       overflow-y: scroll;
+     }
+
+
+    </style>
+  </head>
+  <body>
+      行を追加します <input type="button" value="追加" id="addRow" onclick="addRow()">
+
+    <table id="table" border="1">
+        <tr>
+            <td>
+                項目１
+            </td>
+            <td>
+                項目２
+            </td>
+            <td>
+                UP/DOWN
+            </td>
+        </tr>
+        <tr>
+            <td>
+                hogehogeho
+            </td>
+            <td>
+                この行を削除しますか？<input type="button" value="削除" id="coladd" onclick="delRow(this)">
+            </td>
+            <td><button onclick="upRow(this)">↑</button><button  onclick="downRow(this)">↓</button></td>
+        </tr>
+    </table>
+
+    <script>
+        function addRow() {
+            var table = document.getElementById("table");
+            
+            // テーブルの最終行を取得
+            var element = table.rows[table.rows.length - 1];
+            // コピーし、テーブルの最終行に追加
+            var cloneElement = element.cloneNode(true);
+            cloneElement.cells[0].innerHTML=cloneElement.cells[0].innerHTML + table.rows.length; // 項目１の内容を編集
+            table.lastElementChild.appendChild(cloneElement);
+        }
+        function delRow(obj) {
+            var table = document.getElementById("table");
+            if(table.rows.length !== 2) {
+                // 削除ボタンを押下された行を取得
+                tr = obj.parentNode.parentNode;
+                // trのインデックスを取得して行を削除する
+                tr.parentNode.deleteRow(tr.sectionRowIndex);
+            }
+        }
+        function upRow(obj) {
+
+            // ↑ボタンを押下された行を取得
+            tr = obj.parentNode.parentNode;
+            console.log(tr.sectionRowIndex);
+            if(tr.sectionRowIndex !== 1) {           
+                var table = document.getElementById("table");
+
+                // 上に入れ替えるノード
+                var up = table.rows[tr.sectionRowIndex].cloneNode(true);
+                // 下に入れ替えるノード
+                var down = table.rows[tr.sectionRowIndex - 1].cloneNode(true);
+
+                tr.parentNode.replaceChild(up,table.rows[tr.sectionRowIndex - 1]);
+                tr.parentNode.replaceChild(down, table.rows[tr.sectionRowIndex]);
+            }
+        }
+        
+        function downRow(obj) {
+
+            // ↓ボタンを押下された行を取得
+            tr = obj.parentNode.parentNode;
+            
+            var table = document.getElementById("table");
+            if(tr.sectionRowIndex !== table.rows.length - 1) {              
+                // 下に入れ替えるノード
+                var down = table.rows[tr.sectionRowIndex].cloneNode(true);
+                // 上に入れ替えるノード
+                var up = table.rows[tr.sectionRowIndex + 1].cloneNode(true);
+
+                tr.parentNode.replaceChild(down,table.rows[tr.sectionRowIndex + 1]);
+                tr.parentNode.replaceChild(up, table.rows[tr.sectionRowIndex]);
+            }
+        }
+
+    </script>
+  </body>
+</html>
