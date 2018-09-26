@@ -78,6 +78,9 @@
             <td>
                 UP/DOWN
             </td>
+            <td>
+                都道府県
+            </td>
         </tr>
         <tr>
             <td>
@@ -87,25 +90,77 @@
                 この行を削除しますか？<input type="button" value="削除" id="coladd" onclick="delRow(this)">
             </td>
             <td><button onclick="upRow(this)">↑</button><button  onclick="downRow(this)">↓</button></td>
+            <td>
+                <select name="pref_id">
+					<option value="" selected>選択</option>
+					<option value="1">北海道</option>
+					<option value="2">青森県</option>
+					<option value="3">岩手県</option>
+					<option value="4">宮城県</option>
+					<option value="5">秋田県</option>
+					<option value="6">山形県</option>
+					<option value="7">福島県</option>
+					<option value="8">茨城県</option>
+					<option value="9">栃木県</option>
+					<option value="10">群馬県</option>
+					<option value="11">埼玉県</option>
+					<option value="12">千葉県</option>
+					<option value="13">東京都</option>
+					<option value="14">神奈川県</option>
+					<option value="15">新潟県</option>
+					<option value="16">富山県</option>
+					<option value="17">石川県</option>
+					<option value="18">福井県</option>
+					<option value="19">山梨県</option>
+					<option value="20">長野県</option>
+					<option value="21">岐阜県</option>
+					<option value="22">静岡県</option>
+					<option value="23">愛知県</option>
+					<option value="24">三重県</option>
+					<option value="25">滋賀県</option>
+					<option value="26">京都府</option>
+					<option value="27">大阪府</option>
+					<option value="28">兵庫県</option>
+					<option value="29">奈良県</option>
+					<option value="30">和歌山県</option>
+					<option value="31">鳥取県</option>
+					<option value="32">島根県</option>
+					<option value="33">岡山県</option>
+					<option value="34">広島県</option>
+					<option value="35">山口県</option>
+					<option value="36">徳島県</option>
+					<option value="37">香川県</option>
+					<option value="38">愛媛県</option>
+					<option value="39">高知県</option>
+					<option value="40">福岡県</option>
+					<option value="41">佐賀県</option>
+					<option value="42">長崎県</option>
+					<option value="43">熊本県</option>
+					<option value="44">大分県</option>
+					<option value="45">宮崎県</option>
+					<option value="46">鹿児島県</option>
+					<option value="47">沖縄県</option>
+				</select>
+            </td>
         </tr>
     </table>
 
     <script>
         function addRow() {
-            var table = document.getElementById("table");
+            const table = document.getElementById("table");
             
             // テーブルの最終行を取得
-            var element = table.rows[table.rows.length - 1];
+            const element = table.rows[table.rows.length - 1];
             // コピーし、テーブルの最終行に追加
-            var cloneElement = element.cloneNode(true);
+            const cloneElement = element.cloneNode(true);
             cloneElement.cells[0].innerHTML=cloneElement.cells[0].innerHTML + table.rows.length; // 項目１の内容を編集
             table.lastElementChild.appendChild(cloneElement);
         }
         function delRow(obj) {
-            var table = document.getElementById("table");
+            const table = document.getElementById("table");
             if(table.rows.length !== 2) {
                 // 削除ボタンを押下された行を取得
-                tr = obj.parentNode.parentNode;
+                const tr = obj.parentNode.parentNode;
                 // trのインデックスを取得して行を削除する
                 tr.parentNode.deleteRow(tr.sectionRowIndex);
             }
@@ -113,33 +168,38 @@
         function upRow(obj) {
 
             // ↑ボタンを押下された行を取得
-            tr = obj.parentNode.parentNode;
-            console.log(tr.sectionRowIndex);
-            if(tr.sectionRowIndex !== 1) {           
-                var table = document.getElementById("table");
+            const trNode = obj.parentNode.parentNode;
+            if(trNode.sectionRowIndex !== 1) {           
+                const table = document.getElementById("table");
 
                 // 上に入れ替えるノード
-                var up = table.rows[tr.sectionRowIndex].cloneNode(true);
+                const up = table.rows[trNode.sectionRowIndex].cloneNode(true);
                 // 下に入れ替えるノード
-                var down = table.rows[tr.sectionRowIndex - 1].cloneNode(true);
-
-                tr.parentNode.replaceChild(up,table.rows[tr.sectionRowIndex - 1]);
-                tr.parentNode.replaceChild(down, table.rows[tr.sectionRowIndex]);
+                const down = table.rows[trNode.sectionRowIndex - 1].cloneNode(true);
+                // プルダウンの選択状態をコピー
+                up.getElementsByTagName("select").item(0).value = table.rows[trNode.sectionRowIndex ].getElementsByTagName("select").item(0).value
+                down.getElementsByTagName("select").item(0).value = table.rows[trNode.sectionRowIndex - 1].getElementsByTagName("select").item(0).value;
+                
+                trNode.parentNode.replaceChild(up,table.rows[trNode.sectionRowIndex - 1]);
+                trNode.parentNode.replaceChild(down, table.rows[trNode.sectionRowIndex]);
             }
         }
         
         function downRow(obj) {
 
             // ↓ボタンを押下された行を取得
-            tr = obj.parentNode.parentNode;
+            const tr = obj.parentNode.parentNode;
             
-            var table = document.getElementById("table");
+            const table = document.getElementById("table");
             if(tr.sectionRowIndex !== table.rows.length - 1) {              
                 // 下に入れ替えるノード
-                var down = table.rows[tr.sectionRowIndex].cloneNode(true);
+                const down = table.rows[tr.sectionRowIndex].cloneNode(true);
                 // 上に入れ替えるノード
-                var up = table.rows[tr.sectionRowIndex + 1].cloneNode(true);
-
+                const up = table.rows[tr.sectionRowIndex + 1].cloneNode(true);
+                // プルダウンの選択状態をコピー
+                down.getElementsByTagName("select").item(0).value = table.rows[tr.sectionRowIndex ].getElementsByTagName("select").item(0).value
+                up.getElementsByTagName("select").item(0).value = table.rows[tr.sectionRowIndex + 1].getElementsByTagName("select").item(0).value;
+                
                 tr.parentNode.replaceChild(down,table.rows[tr.sectionRowIndex + 1]);
                 tr.parentNode.replaceChild(up, table.rows[tr.sectionRowIndex]);
             }
