@@ -9,12 +9,12 @@
             display: inline-block;
             display: -webkit-flex;
             display: flex;
-            -webkit-justify-content: space-between;
-            justify-content: space-between;
+              -webkit-box-pack: justify;
+            justify-content: space-around;
           }
           img {
-            width: 49%;
-            height: 49%;
+            width: 90%;
+            height: 90%;
           }
         </style>
     </head>
@@ -46,11 +46,13 @@
                    const lastElement = fileList.lastElementChild;
                    const img = document.createElement("img");
                    img.src = window.URL.createObjectURL(files[i]);
-                   img.onload = function(e) {
-                     window.URL.revokeObjectURL(this.src);
-                   }
+
                    if(lastElement.childElementCount != 2) {
-                       lastElement.appendChild(img);
+                       const a = document.createElement("a");
+                       a.href = img.src;
+                       a.target = "_blank";
+                       a.appendChild(img);
+                       lastElement.appendChild(a);
                    }
 
                    if(lastElement.childElementCount == 2 && i != files.length - 1){
