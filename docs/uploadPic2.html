@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang='ja'>
+    <head>
+        <meta charset="utf-8">
+        <title>×ボタンで画像を削除</title>
+        
+        <style>
+            .row {
+                display: inline-block;
+                display: -webkit-flex;
+                display: flex;
+            }
+        
+            .example {
+                position: relative;
+                width: 600px;
+                margin-top: 25px;
+                margin-left: 25px;
+                margin-right: 25px;
+            }
+        
+            .example button {
+                  position: absolute;
+                  color: blueviolet;
+                  top: -22px;
+                  right: -24px;
+              }
+            
+            .example img {
+                  width: 100%;
+              }
+        
+        </style>
+    </head>
+    <body>
+        <div class="row">
+            <div class="example">
+              <img src="./pic/Penguins.jpg" />
+              <button onclick="delPic(this)">×</button>
+            </div>
+            <div class="example">
+              <img src="./pic/Desert.jpg" />
+              <button onclick="delPic(this)">×</button>
+            </div>
+        </div>
+        <script>
+            function delPic(obj) {                obj.parentElement.parentElement.removeChild(obj.parentElement);
+            }
+        
+        </script>
+    </body>
+</html>
+
