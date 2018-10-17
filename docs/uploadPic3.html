@@ -1,109 +1,150 @@
 <!DOCTYPE html>
 <html lang='ja'>
-    <head>
-        <meta charset="utf-8">
-        <title>選択した画像を画面に表示する。</title>
-        <script src="./js/jquery-3.3.1.min.js"></script>
-        <style>
-          .row {
+
+<head>
+    <meta charset="utf-8">
+    <title>選択した画像を画面に表示する。</title>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <style>
+        .row {
                 display: inline-block;
                 display: -webkit-flex;
                 display: flex;
-          }
-
-          img {
-            width: 100%;
-            height: 100%;
-            margin-right: 20px;
-            margin-left: 20px;
+                height: 600px;
           }
 
             .picture {
                 position: relative;
                 width: 600px;
-                margin-top: 100px;
-                margin-left: 100px;
-                margin-right: 100px;
+                height: 450x;
+                margin-top: 50px;
+                margin-left: 50px;
+                margin-right: 50px;
             }
 
-            .picture button {
+            /* ボタン（横写真） */
+            .landscape {
                   position: absolute;
                   color: blueviolet;
                   top: -50px;
-                  right: -45px;
+                  right: -69px;
                   width: 50px;
                   height: 50px;
-                  font-size: 40px;
+                  font-size: 30px;
               }
 
-            .row img {
-                  width: 100%;
+             /* ボタン（縦写真） */
+            .portrait {
+                  position: absolute;
+                  color: blueviolet;
+                  top: -50px;
+                  right: 194px;
+                  width: 50px;
+                  height: 50px;
+                  font-size: 30px;
               }
+
+          img {
+            width:auto;
+            height:450px;
+            max-width:100%;
+            max-height:100%;
+            margin-right: 20px;
+            margin-left: 20px;
+          }
+
         </style>
-    </head>
-    <body>
-        <input type="file" id="fileElem" multiple accept="image/*" style="display:none" onchange="uploadPicture(this.files)">
-        <a href="#" id="fileSelect">Select some files</a>
-        <div id="fileList" ></div>
-        <script>
-           window.URL = window.URL || window.webkitURL;
+</head>
 
-           const fileSelect = document.getElementById("fileSelect"),
-                 fileElem   = document.getElementById("fileElem"),
-                 fileList   = document.getElementById("fileList");
+<body>
+    <input type="file" id="fileElem" multiple accept="image/*" style="display:none" onchange="uploadPicture(this.files)">
+    <a href="#" id="fileSelect">Select some files</a>
+    <div id="fileList"></div>
+    <script>
+        window.URL = window.URL || window.webkitURL;
 
-           fileSelect.addEventListener("click", function (e) {
-             if (fileElem) {
-               fileElem.click();
-             }
-             e.preventDefault(); // prevent navigation to "#"
-           }, false);
+        const fileSelect = document.getElementById("fileSelect"),
+            fileElem = document.getElementById("fileElem"),
+            fileList = document.getElementById("fileList");
 
-           function uploadPicture(files) {
-
-               if (!fileList.hasChildNodes() || fileList.lastElementChild.childElementCount == 2) {
-
-                   const rowElement = document.createElement("div");
-                   rowElement.classList.add("row")
-                  fileList.appendChild(rowElement);
-               }
-
-               for (let i = 0; i < files.length; i++) {
-                   const lastElement = fileList.lastElementChild;
-
-                   const img = document.createElement("img");
-                   img.src = window.URL.createObjectURL(files[i]);
-                   const button = document.createElement("button");
-                   button.innerHTML="×";
-                   <!--button.addEventListener("click",delPic(this),false); -->
-
-                   if(lastElement.childElementCount != 2) {
-                       const div = document.createElement("div");
-                       div.classList.add("picture");
-                       const a = document.createElement("a");
-                       a.href = img.src;
-                       a.target = "_blank";
-                       a.appendChild(img);
-                       div.appendChild(button);
-                       div.appendChild(a);
-                       lastElement.appendChild(div);
-                   }
-
-                   if(lastElement.childElementCount == 2 && i != files.length - 1){
-                       const rowElement = document.createElement("div");
-                       rowElement.classList.add("row")
-                       fileList.appendChild(rowElement);
-                   }
-                }
-             }
-
-            function delPic(obj) {
-               const a = obj.parentElement
-               const b = a.parentElement;
-               b.removeChild(a);
-               obj.parentElement.parentElement.removeChild(obj.parentElement);
+        fileSelect.addEventListener("click", function(e) {
+            if (fileElem) {
+                fileElem.click();
             }
-        </script>
-  </body>
-</html>
+            e.preventDefault(); // prevent navigation to "#"
+        }, false);
 
+        function uploadPicture(files) {
+
+            if (!fileList.hasChildNodes() || fileList.lastElementChild.childElementCount == 2) {
+
+                const rowElement = document.createElement("div");
+                rowElement.classList.add("row")
+                fileList.appendChild(rowElement);
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const button = document.createElement("button");
+                const img = document.createElement("img");
+                const fileReader = new FileReader();
+                // 読み込み後の処理
+                fileReader.onload = function() {
+                    img.src = this.result;
+                    img.onload = function() {
+                        if (img.height > img.width) {
+                            button.classList.add("portrait");
+                        } else {
+                            button.classList.add("landscape");
+                        }
+                    }
+
+                }
+                // ファイルをData URIとして読み込む
+                fileReader.readAsDataURL(files[i]);
+
+
+                button.innerHTML = "×";
+                button.addEventListener("click", function() {
+                    this.parentElement.parentElement.removeChild(this.parentElement);
+                }, false);
+
+                const lastElement = fileList.lastElementChild;
+                if (lastElement.childElementCount != 2) {
+                    const div = document.createElement("div");
+                    div.classList.add("picture");
+
+                    const a = document.createElement("a");
+                    const img = document.createElement("img");
+                    const fileReader = new FileReader();
+
+                    // 読み込み後の処理
+                    fileReader.onload = function() {
+                        img.src = this.result;
+                        a.href = img.src;
+                    }
+
+                    // ファイルをData URIとして読み込む
+                    fileReader.readAsDataURL(files[i]);
+
+                    a.target = "_blank";
+                    a.appendChild(img);
+                    div.appendChild(button);
+                    div.appendChild(a);
+                    lastElement.appendChild(div);
+                }
+
+                if (lastElement.childElementCount == 2 && i != files.length - 1) {
+                    const rowElement = document.createElement("div");
+                    rowElement.classList.add("row")
+                    fileList.appendChild(rowElement);
+                }
+            }
+        }
+
+        function delPic(obj) {
+            obj.parentElement.parentElement.removeChild(obj.parentElement);
+        }
+    </script>
+</body>
+
+</html>
