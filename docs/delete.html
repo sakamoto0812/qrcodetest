@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang='ja'>
     <head>
-        <meta charset="utf-8">
-        <title>選択した画像を画面に表示する。</title>
-        <script src="./js/jquery-3.3.1.min.js"></script>
-        <style>
-            table {
-                width: 600px;
-                height: 400px;
-            }
-
-            button {
+    <meta charset="utf-8">
+    <title>選択した画像を画面に表示する。</title>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <style>
+        button {
                 width: 250px;
                 height: 50px;
                 font-size: 50px;
@@ -18,49 +13,53 @@
 
 
         </style>
-    </head>
-    <body>
-        <table id="sampleTable" border="2">
-            <tr>
-                <td>
-                    <button onclick="delPic(this)">1</button>
-                </td>
-                <td>
-                    <button onclick="delPic(this)">2</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button type="button"  onclick="delPic(this)">3</button>
-                </td>
-                <td>
-                    <button onclick="delPic(this)">4</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button onclick="delPic(this)">5</button>
-                </td>
-                <td>
-                    <button onclick="delPic(this)">6</button>
-                </td>
-            </tr>
-        </table>
-        <script>
-            function delPic(obj) {
-                const table = document.getElementById("sampleTable");
-                const rowNum = table.rows.length;
-                const startRowNum = obj.parentNode.parentNode.rowIndex;
-                console.log(startRowNum);
-                for (let i = startRowNum; i+1 < rowNum; i++) {
-                    const rows = table.rows[i+1];
-                    const cell = rows.cells[0].cloneNode(true);
-                    table.rows[i].appendChild(cell);
-                    rows.deleteCell(0);
-                }
-                obj.parentElement.parentElement.removeChild(obj.parentElement);
+</head>
+
+<body>
+    <table id="sampleTable" border="2">
+        <tr>
+            <td>
+                <button onclick="delPic(this)">1</button>
+            </td>
+            <td>
+                <button onclick="delPic(this)">2</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" onclick="delPic(this)">3</button>
+            </td>
+            <td>
+                <button onclick="delPic(this)">4</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button onclick="delPic(this)">5</button>
+            </td>
+            <td>
+                <button onclick="delPic(this)">6</button>
+            </td>
+        </tr>
+    </table>
+    <script>
+        function delPic(obj) {
+            const table = document.getElementById("sampleTable");
+            const rowNum = table.rows.length;
+            const startRowNum = obj.parentNode.parentNode.rowIndex;
+            console.log(startRowNum);
+            for (let i = startRowNum; i + 1 < rowNum; i++) {
+                const rows = table.rows[i + 1];
+                const cell = rows.cells[0].cloneNode(true);
+                table.rows[i].appendChild(cell);
+                rows.deleteCell(0);
+            }
+            if (table.rows[rowNum - 1].cells.length == 0) {
+                table.deleteRow(rowNum - 1);
+            }
+            obj.parentElement.parentElement.removeChild(obj.parentElement);
         }
-        </script>
-  </body>
+    </script>
+</body>
 </html>
 
