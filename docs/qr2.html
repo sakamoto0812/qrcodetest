@@ -82,6 +82,7 @@
             <thead id='header'>
                 <th>no</th>
                 <th>QR</th>
+                <th>select</th>
             </thead>
             <tbody id='tableBody'>
 
@@ -161,9 +162,14 @@
             cell2.innerHTML = qrCodeData;
             const h = document.createElement('input');
             h.type = 'hidden';
-            h.name = 'qrCodeDataHidden';
+            h.name = "form"+ "[" + rowIndex +"]" + "." + "qrCodeDataHidden";
             h.value = qrCodeData;
             cell2.appendChild(h);
+            const cell3 = row.insertCell(2);
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.name = "form"+ "[" + rowIndex + "]" + "." + "select";
+            cell3.appendChild(box);
 
 
             // 一番下にスクロール
