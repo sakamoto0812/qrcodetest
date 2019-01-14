@@ -1,205 +1,217 @@
 <!DOCTYPE html>
 <html lang='ja'>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>jsQR Demo</title>
     <script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
-    
+
     <style>
-     body {
-       font-family: sans-serif;
-       color: #333;
-       max-width: 640px;
-       margin: 0 auto;
-       //position: relative;
-     }
+        body {
+            font-family: sans-serif;
+            color: #333;
+            max-width: 640px;
+            margin: 0 auto;
+            //position: relative;
+        }
 
-     h1 {
-       margin: 10px 0;
-       font-size: 40px;
-     }
+        h1 {
+            margin: 10px 0;
+            font-size: 40px;
+        }
 
-     #loadingMessage {
-       text-align: center;
-       padding: 40px;
-       background-color: #eee;
-     }
+        #loadingMessage {
+            text-align: center;
+            padding: 40px;
+            background-color: #eee;
+        }
 
-     #canvas {
-       width: 100%;
-     }
+        #canvas {
+            width: 100%;
+        }
 
-     #output {
-       margin-top: 20px;
-       background: #eee;
-       padding: 10px;
-       padding-bottom: 0;
-     }
+        #output {
+            margin-top: 20px;
+            background: #eee;
+            padding: 10px;
+            padding-bottom: 0;
+        }
 
-     #output div {
-       padding-bottom: 10px;
-       word-wrap: break-word;
-     }
+        #output div {
+            padding-bottom: 10px;
+            word-wrap: break-word;
+        }
 
-     #noQRFound {
-       text-align: center;
-     }
-     /* テーブル  */
-     table, th, td {
-       border-collapse: collapse;
-       border: 1px solid #ccc;
-       line-height: 1.5;
-     }
+        #noQRFound {
+            text-align: center;
+        }
 
-     tr:nth-child(even) {
-       background: #d9d9d9;
-     }
+        /* テーブル  */
+        table,
+        th,
+        td {
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            line-height: 1.5;
+        }
+
+        tr:nth-child(even) {
+            background: #d9d9d9;
+        }
 
 
-     div#output {
-       height: 300px;
-       overflow-y: scroll;
-     }
+        div#output {
+            height: 300px;
+            overflow-y: scroll;
+        }
 
-     
     </style>
-  </head>
-  <body>
-    <div id='camera'>
-      <h1>QRコードリーダー2.0.10</h1>
-      <div id="loadingMessage">ビデオが有効になっていません。</div>
+</head>
 
-      <!-- キャンバス -->
-      <canvas id="canvas" hidden></canvas>
+<body>
+    <div id='camera'>
+        <h1>QRコードリーダー2.0.10</h1>
+        <div id="loadingMessage">ビデオが有効になっていません。</div>
+
+        <!-- キャンバス -->
+        <canvas id="canvas" hidden></canvas>
     </div>
     <div id="output" hidden>
-      <div id="outputMessage">QRコードが読み取れません。</div>
-      <table id='qrcodes'>
-        <thead id='header'>
-          <th>no</th>
-          <th>QR</th>
-        </thead>
-        <tbody id='tableBody'>
-          
-        </tbody>
-      </table>
+        <div id="outputMessage">QRコードが読み取れません。</div>
+        <table id='qrcodes'>
+            <thead id='header'>
+                <th>no</th>
+                <th>QR</th>
+            </thead>
+            <tbody id='tableBody'>
+
+            </tbody>
+        </table>
     </div>
-    
+
     <div id='container'>
     </div>
 
-    
+
     <script>
-     // DOM要素
-     const video = document.createElement("video");
-     const canvasElement = document.getElementById("canvas");
-     const canvas = canvasElement.getContext("2d");
-     const loadingMessage = document.getElementById("loadingMessage");
-     const outputContainer = document.getElementById("output");
-     const outputMessage = document.getElementById("outputMessage");
-     const table = document.getElementById('qrcodes');
-     const tableBody = document.getElementById('tableBody');
-     
-     // 設定値
-     const delay = 50; // ビデオ読み取り間隔(ms)
-     const waitAfterRead = 1000; // QRコード読み取り後の待ち時間(ms)
+        // DOM要素
+        const video = document.createElement("video");
+        const canvasElement = document.getElementById("canvas");
+        const canvas = canvasElement.getContext("2d");
+        const loadingMessage = document.getElementById("loadingMessage");
+        const outputContainer = document.getElementById("output");
+        const outputMessage = document.getElementById("outputMessage");
+        const table = document.getElementById('qrcodes');
+        const tableBody = document.getElementById('tableBody');
 
-     // 色
-     const red = "#FF3B58";
-     const blue = "#3B58FF";
+        // 設定値
+        const delay = 50; // ビデオ読み取り間隔(ms)
+        const waitAfterRead = 1000; // QRコード読み取り後の待ち時間(ms)
 
-     // 音
-     const soundEffect = new Audio('./chimes.wav');
-     soundEffect.load();
-     
-     // データ
-     const scanned = new Set();  // 読み取り済みQRコード
-     
+        // 色
+        const red = "#FF3B58";
+        const blue = "#3B58FF";
 
-     // 線を引く(QRコードを認識したとき用)
-     function drawLine(begin, end, color) {
-       canvas.beginPath();
-       canvas.moveTo(begin.x, begin.y);
-       canvas.lineTo(end.x, end.y);
-       canvas.lineWidth = 4;
-       canvas.strokeStyle = color;
-       canvas.stroke();
-     }
+        // 音
+        const soundEffect = new Audio('./chimes.wav');
+        soundEffect.load();
 
-     // カメラを動作させる
-     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-       video.srcObject = stream;
-       video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-       video.play();
-       setTimeout(tick, delay);
-     });
+        // データ
+        const scanned = new Set(); // 読み取り済みQRコード
 
 
-     function drawRectangle(code, color) {
-       drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
-       drawLine(code.location.topRightCorner, code.location.bottomRightCorner, color);
-       drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, color);
-       drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);
-     }
+        // 線を引く(QRコードを認識したとき用)
+        function drawLine(begin, end, color) {
+            canvas.beginPath();
+            canvas.moveTo(begin.x, begin.y);
+            canvas.lineTo(end.x, end.y);
+            canvas.lineWidth = 4;
+            canvas.strokeStyle = color;
+            canvas.stroke();
+        }
 
-     function writeQrCode(qrCodeData) {
-       outputMessage.hidden = true;
-       // 読み取り済でない新規データであればテーブルに追加       
-       const rowIndex = table.rows.length;
-       const row = tableBody.insertRow(rowIndex - 1);
-       const cell1 = row.insertCell(0);
-       cell1.innerHTML = rowIndex;
-       const cell2 = row.insertCell(1);
-       cell2.innerHTML = qrCodeData;
+        // カメラを動作させる
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "environment"
+            }
+        }).then(function(stream) {
+            video.srcObject = stream;
+            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            video.play();
+            setTimeout(tick, delay);
+        });
 
-       // 一番下にスクロール
-       document.getElementById('output').scrollTo(0, 5400);
 
-     }
-     
-     function tick() {
-       loadingMessage.innerText = "読み込んでいます..."
-       let delayToNextTick = delay;
-       if (video.readyState === video.HAVE_ENOUGH_DATA) {
-         // 表示設定の変更
-         loadingMessage.hidden = true;
-         canvasElement.hidden = false;
-         outputContainer.hidden = false;
+        function drawRectangle(code, color) {
+            drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
+            drawLine(code.location.topRightCorner, code.location.bottomRightCorner, color);
+            drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, color);
+            drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);
+        }
 
-         canvasElement.height = video.videoHeight;
-         canvasElement.width = video.videoWidth;
-         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-         var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-         var code = jsQR(imageData.data, imageData.width, imageData.height);
-         if (code) {
-           const qrCodeData = code.data;
-           if (!scanned.has(qrCodeData)) {
-             // 読み取り済QRコードとして記憶
-             scanned.add(qrCodeData);
-             // 読み取ったQRコードをテーブルに追加
-             writeQrCode(qrCodeData);
-             // waitを入れる
-             delayToNextTick += waitAfterRead;
+        function writeQrCode(qrCodeData) {
+            outputMessage.hidden = true;
+            // 読み取り済でない新規データであればテーブルに追加
+            const rowIndex = table.rows.length;
+            const row = tableBody.insertRow(rowIndex - 1);
+            const cell1 = row.insertCell(0);
+            cell1.innerHTML = rowIndex;
+            const cell2 = row.insertCell(1);
+            cell2.innerHTML = qrCodeData;
+            const h = document.createElement('input');
+            h.type = 'hidden';
+            h.name = 'qrCodeDataHidden';
+            h.value = qrCodeData;
+            cell2.appendChild(h);
 
-             // 音を鳴らす
-             soundEffect.play();
-             
-             // 四角い線で囲う
-             drawRectangle(code, blue);
 
-           } else {
-             // 読み取り済みの場合
-             // 四角い線で囲う
-             drawRectangle(code, red);
-           }
-         }
-       }
-       setTimeout(tick, delayToNextTick);
-     }
+            // 一番下にスクロール
+            document.getElementById('output').scrollTo(0, 5400);
+
+        }
+
+        function tick() {
+            loadingMessage.innerText = "読み込んでいます..."
+            let delayToNextTick = delay;
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                // 表示設定の変更
+                loadingMessage.hidden = true;
+                canvasElement.hidden = false;
+                outputContainer.hidden = false;
+
+                canvasElement.height = video.videoHeight;
+                canvasElement.width = video.videoWidth;
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height);
+                if (code) {
+                    const qrCodeData = code.data;
+                    if (!scanned.has(qrCodeData)) {
+                        // 読み取り済QRコードとして記憶
+                        scanned.add(qrCodeData);
+                        // 読み取ったQRコードをテーブルに追加
+                        writeQrCode(qrCodeData);
+                        // waitを入れる
+                        delayToNextTick += waitAfterRead;
+
+                        // 音を鳴らす
+                        soundEffect.play();
+
+                        // 四角い線で囲う
+                        drawRectangle(code, blue);
+
+                    } else {
+                        // 読み取り済みの場合
+                        // 四角い線で囲う
+                        drawRectangle(code, red);
+                    }
+                }
+            }
+            setTimeout(tick, delayToNextTick);
+        }
+
     </script>
-  </body>
+</body>
+
 </html>
-
-
-
-
